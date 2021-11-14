@@ -4,42 +4,33 @@
 	<title>Ping Pong Game</title>
 </head>
 <body>
-	<canvas id="canvas" width="800" height="400"></canvas>
+	<canvas id="canvas" width="800" height="400" style="border:1px solid #000000;"></canvas>
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript">
 		//Sample functions, remove these functions and design ping-pong game with onInit and onUpdate.
 
 		app.onInit = function(){
 			this.nodes.push({
-				id : 'red-box',
+				id : 'LeftPaddle',
 				x  : 100,
-				y  : 0,
-				width  : 100,
+				y  : 150,
+				width  : 10,
 				height : 100,
-				color  : 'red',
-				direction : 0
+				color  : 'black',
 			});
 
 			this.nodes.push({
-				id : 'black-box',
-				x  : 50,
-				y  : 0,
-				width  : 150,
-				height : 150,
+				id : 'RightPaddle',
+				x  : 690,
+				y  : 150,
+				width  : 10,
+				height : 100,
 				color  : 'black'
 			});
 		};
 
 		app.onUpdate = function(time){
-			this.getNode('black-box').y++;
 
-			if(Math.cos(this.timestamp / 100) > 0){
-				this.getNode('red-box').direction = -1;
-			}else{
-				this.getNode('red-box').direction = 1;
-			}
-
-			this.getNode('red-box').x+=this.getNode('red-box').direction;
 		};
 	</script>
 </body>
