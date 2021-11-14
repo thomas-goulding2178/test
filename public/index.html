@@ -20,6 +20,14 @@
 				app.getNode('LeftPaddle').y += 2;	
 			if(app.getNode('LeftPaddle').pressingUp)
 				app.getNode('LeftPaddle').y -= 2;	
+			if (app.getNode('LeftPaddle').y < 0)
+				app.getNode('LeftPaddle').y = 0;
+			if (app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height > HEIGHT)
+				app.getNode('LeftPaddle').y = HEIGHT - app.getNode('LeftPaddle').height;
+			if (app.getNode('RightPaddle').y < 0)
+				app.getNode('RightPaddle').y = 0;
+			if (app.getNode('RightPaddle').y + app.getNode('RightPaddle').height > HEIGHT)
+				app.getNode('RightPaddle').y = HEIGHT - app.getNode('RightPaddle').height;
 		};
 		
 		CheckKeyPress = function(){
