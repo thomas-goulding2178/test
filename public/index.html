@@ -30,7 +30,22 @@
 				app.getNode('RightPaddle').y = HEIGHT - app.getNode('RightPaddle').height;
 		};
 		
-		UpdateBallPosition = function(){	
+		CheckCollisionPaddles = function(){
+				if (app.getNode('ball').y > app.getNode('RightPaddle').y && app.getNode('ball').y < app.getNode('RightPaddle').y + app.getNode('RightPaddle').height){
+					if (app.getNode('ball').x + app.getNode('ball').width > app.getNode('RightPaddle').x && app.getNode('ball').x + app.getNode('ball').width < app.getNode('RightPaddle').x + app.getNode('ball').speedx + 1){
+						app.getNode('ball').speedx = -Math.abs(app.getNode('ball').speedx)
+					}
+				}
+				
+				if (app.getNode('ball').y > app.getNode('LeftPaddle').y && app.getNode('ball').y < app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height){
+					if (app.getNode('ball').x < app.getNode('LeftPaddle').x + app.getNode('LeftPaddle').width && app.getNode('ball').x > app.getNode('LeftPaddle').x + app.getNode('LeftPaddle').width + app.getNode('ball').speedx - 1){
+						app.getNode('ball').speedx = Math.abs(app.getNode('ball').speedx)
+					}
+				}
+		};
+		
+		UpdateBallPosition = function(){
+			CheckCollisionPaddles();
 			app.getNode('ball').x += app.getNode('ball').speedx
 			app.getNode('ball').y += app.getNode('ball').speedy
 			if (app.getNode('ball').y < 0 || app.getNode('ball').y > HEIGHT - app.getNode('ball').height){
@@ -62,8 +77,8 @@
 				else if(event.keyCode === 87) // w
 					app.getNode('LeftPaddle').pressingUp = false;
 			}
-		};
-			
+		};			
+		
 		app.onInit = function(){
 			this.nodes.push({
 				id : 'LeftPaddle',
@@ -98,8 +113,8 @@
 				width  : 10,
 				height : 10,
 				color  : 'red',
-				speedx : -1,
-				speedy : 5,
+				speedx : 5,
+				speedy : 1,
 			});
 		};
 
