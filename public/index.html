@@ -51,6 +51,9 @@
 			if (app.getNode('ball').y < 0 || app.getNode('ball').y > HEIGHT - app.getNode('ball').height){
 				app.getNode('ball').speedy = -app.getNode('ball').speedy
 			}
+			if (app.getNode('ball').x < 0 || app.getNode('ball').x + app.getNode('ball').width > WIDTH){
+				app.reset();
+			}
 		};
 		
 		CheckKeyPress = function(){
@@ -78,6 +81,17 @@
 					app.getNode('LeftPaddle').pressingUp = false;
 			}
 		};			
+		
+		
+		
+		app.reset = function(){
+			app.getNode('LeftPaddle').y = 150;
+			app.getNode('RightPaddle').y = 150;
+			app.getNode('ball').x = 395;
+			app.getNode('ball').y = 195;
+			app.getNode('ball').speedx = 5;
+			app.getNode('ball').speedy = 1;
+		};
 		
 		app.onInit = function(){
 			this.nodes.push({
@@ -123,8 +137,7 @@
 			CheckKeyPress();
 			CheckKeyRelease();
 			UpdatePlayerPositions(); 
-			UpdateBallPosition();
-
+			UpdateBallPosition();			
 		}; 
 	</script>
 </body>
