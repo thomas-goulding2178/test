@@ -8,8 +8,9 @@
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript">
 		
-		var HEIGHT = 400
-		var WIDTH = 800
+		var HEIGHT = 400;
+		var WIDTH = 800;
+		var paused = true;
 		
 		UpdatePlayerPositions = function(){				
 			if(app.getNode('RightPaddle').pressingDown)
@@ -79,10 +80,14 @@
 					app.getNode('LeftPaddle').pressingDown = false;
 				else if(event.keyCode === 87) // w
 					app.getNode('LeftPaddle').pressingUp = false;
+				else if(event.keyCode === 32) // w
+					app.pause();
 			}
 		};			
 		
-		
+		app.pause = function(){
+			paused = !paused;
+		};
 		
 		app.reset = function(){
 			app.getNode('LeftPaddle').y = 150;
@@ -91,6 +96,7 @@
 			app.getNode('ball').y = 195;
 			app.getNode('ball').speedx = 5;
 			app.getNode('ball').speedy = 1;
+			paused = true;
 		};
 		
 		app.onInit = function(){
@@ -133,9 +139,11 @@
 		};
 
  		app.onUpdate = function(time){
-		
 			CheckKeyPress();
 			CheckKeyRelease();
+			if(paused){
+				return
+			}
 			UpdatePlayerPositions(); 
 			UpdateBallPosition();			
 		}; 
