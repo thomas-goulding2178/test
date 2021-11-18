@@ -110,8 +110,14 @@
 			app.getNode('ball').y += app.getNode('ball').speedy
 			if (app.getNode('ball').y < 0 || app.getNode('ball').y > HEIGHT - app.getNode('ball').height){
 				app.getNode('ball').speedy = -app.getNode('ball').speedy
+				
 			}
-			if (app.getNode('ball').x < 0 || app.getNode('ball').x + app.getNode('ball').width > WIDTH){
+			if (app.getNode('ball').x < 0){
+				app.RightScore += 1;
+				app.reset();
+			}
+			else if (app.getNode('ball').x + app.getNode('ball').width > WIDTH){
+				app.LeftScore += 1;
 				app.reset();
 			}
 		};
@@ -154,6 +160,18 @@
 			app.getNode('ball').x = WIDTH*0.5;
 			app.getNode('ball').y = HEIGHT*0.5;
 			paused = true;
+			if (app.LeftScore === 7){
+				console.log('Left Player Wins')
+				app.LeftScore = 0;
+				app.RightScore = 0;
+			}	
+				
+			else if (app.RightScore === 7){
+				console.log('Right Player Wins')
+				app.LeftScore = 0;
+				app.RightScore = 0;
+			}
+			
 		};
 		
 		app.onInit = function(){

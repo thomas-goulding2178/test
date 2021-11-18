@@ -2,7 +2,11 @@ var app = {
 	//initial variables
 	canvas  : null,
 	context : null,
-
+	
+	//scores
+	LeftScore : 0,
+	RightScore : 0,
+	
 	//resizing
 	width   : 800,
 	height  : 400,
@@ -15,6 +19,16 @@ var app = {
 	now        : 0,
 	lastUpdate : 0,
 
+	DrawScore : function(){
+		this.context.font = "30px Courier";
+		this.context.fillStyle = "blue";
+		this.context.textAlign = "right";
+		this.context.fillText(this.LeftScore, WIDTH*0.05 , HEIGHT/2);
+		this.context.textAlign = "left";
+		this.context.fillText(this.RightScore, WIDTH*0.95, HEIGHT/2);
+	},
+	
+	
 	init : function(){
 		this.canvas  = document.getElementById('canvas');
 		this.context = this.canvas.getContext('2d');
@@ -33,7 +47,7 @@ var app = {
 	},
 	update : function(){
 	    var dt = Date.now() - this.lastUpdate;
-
+		this.DrawScore(); //Draw the score on the screen
 		this.onUpdate(dt);
 
 		for(var index in this.nodes){
