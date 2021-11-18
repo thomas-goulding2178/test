@@ -7,28 +7,87 @@
 	<canvas id="canvas" width="800" height="400" style="border:1px solid #000000;"></canvas>
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript">
-		
-		var HEIGHT = 400;
-		var WIDTH = 800;
+		var HEIGHT;
+		var WIDTH;
+		var OLDHEIGHT;
+		var OLDWIDTH;
 		var paused = true;
 		
-		UpdatePlayerPositions = function(){				
-			if(app.getNode('RightPaddle').pressingDown)
-				app.getNode('RightPaddle').y += 2;	
-			if(app.getNode('RightPaddle').pressingUp)
-				app.getNode('RightPaddle').y -= 2;	
-			if(app.getNode('LeftPaddle').pressingDown)
-				app.getNode('LeftPaddle').y += 2;	
-			if(app.getNode('LeftPaddle').pressingUp)
-				app.getNode('LeftPaddle').y -= 2;	
-			if (app.getNode('LeftPaddle').y < 0)
-				app.getNode('LeftPaddle').y = 0;
-			if (app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height > HEIGHT)
-				app.getNode('LeftPaddle').y = HEIGHT - app.getNode('LeftPaddle').height;
-			if (app.getNode('RightPaddle').y < 0)
-				app.getNode('RightPaddle').y = 0;
-			if (app.getNode('RightPaddle').y + app.getNode('RightPaddle').height > HEIGHT)
-				app.getNode('RightPaddle').y = HEIGHT - app.getNode('RightPaddle').height;
+
+		OLDWIDTH = WIDTH;
+		OLDHEIGHT = HEIGHT;
+		WIDTH = window.innerWidth;
+		HEIGHT = window.innerHeight;
+		if (WIDTH > 2 * HEIGHT)
+			WIDTH = 2 * HEIGHT;
+		else 
+			HEIGHT = 0.5 * WIDTH;
+		canvas.width = WIDTH;
+		canvas.height = HEIGHT;
+		app.width = WIDTH;
+		app.height = HEIGHT;
+
+		window.addEventListener('resize',function(){
+			OLDWIDTH = WIDTH;
+			OLDHEIGHT = HEIGHT;
+			WIDTH = window.innerWidth;
+			HEIGHT = window.innerHeight;
+			if (WIDTH > 2 * HEIGHT)
+				WIDTH = 2 * HEIGHT;
+			else 
+				HEIGHT = 0.5 * WIDTH;
+			canvas.width = WIDTH;
+			canvas.height = HEIGHT;
+
+	
+			app.width = WIDTH;
+			app.height = HEIGHT;
+			app.getNode('LeftPaddle').x = WIDTH*0.125;
+			app.getNode('RightPaddle').x = WIDTH*0.875;
+			app.getNode('LeftPaddle').y *= HEIGHT/OLDHEIGHT;
+			app.getNode('RightPaddle').y *= HEIGHT/OLDHEIGHT;
+			app.getNode('ball').x *= WIDTH/OLDWIDTH;
+			app.getNode('ball').y *= HEIGHT/OLDHEIGHT;
+			app.getNode('ball').width *= WIDTH/OLDWIDTH;
+			app.getNode('ball').height *= HEIGHT/OLDHEIGHT;
+			app.getNode('ball').speedx = WIDTH/200;
+			app.getNode('ball').speedy = HEIGHT/125;
+			app.getNode('LeftPaddle').width *= WIDTH/OLDWIDTH;
+			app.getNode('LeftPaddle').height *= HEIGHT/OLDHEIGHT;
+			app.getNode('RightPaddle').width *= WIDTH/OLDWIDTH;
+			app.getNode('RightPaddle').height *= HEIGHT/OLDHEIGHT;
+			
+			
+		});
+		
+		ResizeWindow = function(){	
+			WIDTH = window.innerWidth;
+			HEIGHT = window.innerHeight;
+			if (WIDTH > 2 * HEIGHT)
+				WIDTH = 2 * HEIGHT;
+			else 
+				HEIGHT = 0.5 * WIDTH;
+			canvas.width = WIDTH;
+			canvas.height = HEIGHT;
+		}
+		
+		UpdatePlayerPositions = function(){	
+				if(app.getNode('RightPaddle').pressingDown)
+					app.getNode('RightPaddle').y += HEIGHT/75;	
+				if(app.getNode('RightPaddle').pressingUp)
+					app.getNode('RightPaddle').y -= HEIGHT/75;	
+				if(app.getNode('LeftPaddle').pressingDown)
+					app.getNode('LeftPaddle').y += HEIGHT/75;	
+				if(app.getNode('LeftPaddle').pressingUp)
+					app.getNode('LeftPaddle').y -= HEIGHT/75;	
+				if (app.getNode('LeftPaddle').y < 0)
+					app.getNode('LeftPaddle').y = 0;
+				if (app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height > HEIGHT)
+					app.getNode('LeftPaddle').y = HEIGHT - app.getNode('LeftPaddle').height;
+				if (app.getNode('RightPaddle').y < 0)
+					app.getNode('RightPaddle').y = 0;
+				if (app.getNode('RightPaddle').y + app.getNode('RightPaddle').height > HEIGHT)
+					app.getNode('RightPaddle').y = HEIGHT - app.getNode('RightPaddle').height;		
 		};
 		
 		CheckCollisionPaddles = function(){
@@ -90,22 +149,20 @@
 		};
 		
 		app.reset = function(){
-			app.getNode('LeftPaddle').y = 150;
-			app.getNode('RightPaddle').y = 150;
-			app.getNode('ball').x = 395;
-			app.getNode('ball').y = 195;
-			app.getNode('ball').speedx = 5;
-			app.getNode('ball').speedy = 1;
+			app.getNode('LeftPaddle').y = HEIGHT*0.375;
+			app.getNode('RightPaddle').y = HEIGHT*0.375;
+			app.getNode('ball').x = WIDTH*0.5;
+			app.getNode('ball').y = HEIGHT*0.5;
 			paused = true;
 		};
 		
 		app.onInit = function(){
 			this.nodes.push({
 				id : 'LeftPaddle',
-				x  : 100,
-				y  : 150,
-				width  : 10,
-				height : 100,
+				x  : WIDTH*0.125,
+				y  : HEIGHT*0.375,
+				width  : WIDTH*0.0125,
+				height : HEIGHT*0.25,
 				color  : 'black',
 				pressingLeft : false,
 				pressingRight : false,
@@ -115,10 +172,10 @@
 
 			this.nodes.push({
 				id : 'RightPaddle',
-				x  : 690,
-				y  : 150,
-				width  : 10,
-				height : 100,
+				x  : WIDTH*0.875,
+				y  : HEIGHT*0.375,
+				width  : WIDTH*0.0125,
+				height : HEIGHT*0.25,
 				color  : 'black',
 				pressingLeft : false,
 				pressingRight : false,
@@ -128,13 +185,13 @@
 			
 			this.nodes.push = ({
 				id : 'ball',
-				x  : 395,
-				y  : 195,
-				width  : 10,
-				height : 10,
+				x  : WIDTH*0.5,
+				y  : HEIGHT*0.5,
+				width  : WIDTH*0.0125,
+				height : HEIGHT*0.025,
 				color  : 'red',
-				speedx : 5,
-				speedy : 1,
+				speedx : WIDTH/200,
+				speedy : HEIGHT/125,
 			});
 		};
 
