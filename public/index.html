@@ -7,15 +7,18 @@
 	<canvas id="canvas" width="800" height="400" style="border:1px solid #000000;"></canvas>
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript">
+	
+	
+	
+		//setting global variables
 		var HEIGHT;
 		var WIDTH;
-		var OLDHEIGHT;
-		var OLDWIDTH;
 		var paused = true;
 		
-
-		OLDWIDTH = WIDTH;
-		OLDHEIGHT = HEIGHT;
+		
+		
+		
+		//adjusting game size on load of game 
 		WIDTH = window.innerWidth;
 		HEIGHT = window.innerHeight;
 		if (WIDTH > 2 * HEIGHT)
@@ -26,8 +29,13 @@
 		canvas.height = HEIGHT;
 		app.width = WIDTH;
 		app.height = HEIGHT;
-
+		
+		
+		
+		
+		//when the window changes size 
 		window.addEventListener('resize',function(){
+			//change the canvas size and save the old size 
 			OLDWIDTH = WIDTH;
 			OLDHEIGHT = HEIGHT;
 			WIDTH = window.innerWidth;
@@ -38,10 +46,10 @@
 				HEIGHT = 0.5 * WIDTH;
 			canvas.width = WIDTH;
 			canvas.height = HEIGHT;
-
-	
 			app.width = WIDTH;
 			app.height = HEIGHT;
+			
+			//reposition everything with respect to the old position 
 			app.getNode('LeftPaddle').x = WIDTH*0.125;
 			app.getNode('RightPaddle').x = WIDTH*0.875;
 			app.getNode('LeftPaddle').y *= HEIGHT/OLDHEIGHT;
@@ -55,63 +63,72 @@
 			app.getNode('LeftPaddle').width *= WIDTH/OLDWIDTH;
 			app.getNode('LeftPaddle').height *= HEIGHT/OLDHEIGHT;
 			app.getNode('RightPaddle').width *= WIDTH/OLDWIDTH;
-			app.getNode('RightPaddle').height *= HEIGHT/OLDHEIGHT;
-			
-			
+			app.getNode('RightPaddle').height *= HEIGHT/OLDHEIGHT;		
 		});
+
 		
-		ResizeWindow = function(){	
-			WIDTH = window.innerWidth;
-			HEIGHT = window.innerHeight;
-			if (WIDTH > 2 * HEIGHT)
-				WIDTH = 2 * HEIGHT;
-			else 
-				HEIGHT = 0.5 * WIDTH;
-			canvas.width = WIDTH;
-			canvas.height = HEIGHT;
-		}
+		
+		
 		
 		UpdatePlayerPositions = function(){	
-				if(app.getNode('RightPaddle').pressingDown)
-					app.getNode('RightPaddle').y += HEIGHT/75;	
-				if(app.getNode('RightPaddle').pressingUp)
-					app.getNode('RightPaddle').y -= HEIGHT/75;	
-				if(app.getNode('LeftPaddle').pressingDown)
-					app.getNode('LeftPaddle').y += HEIGHT/75;	
-				if(app.getNode('LeftPaddle').pressingUp)
-					app.getNode('LeftPaddle').y -= HEIGHT/75;	
-				if (app.getNode('LeftPaddle').y < 0)
-					app.getNode('LeftPaddle').y = 0;
-				if (app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height > HEIGHT)
-					app.getNode('LeftPaddle').y = HEIGHT - app.getNode('LeftPaddle').height;
-				if (app.getNode('RightPaddle').y < 0)
-					app.getNode('RightPaddle').y = 0;
-				if (app.getNode('RightPaddle').y + app.getNode('RightPaddle').height > HEIGHT)
-					app.getNode('RightPaddle').y = HEIGHT - app.getNode('RightPaddle').height;		
+			//if either player is holding up or down move accordingly 
+			if(app.getNode('RightPaddle').pressingDown)
+				app.getNode('RightPaddle').y += HEIGHT/75;	
+			if(app.getNode('RightPaddle').pressingUp)
+				app.getNode('RightPaddle').y -= HEIGHT/75;	
+			if(app.getNode('LeftPaddle').pressingDown)
+				app.getNode('LeftPaddle').y += HEIGHT/75;	
+			if(app.getNode('LeftPaddle').pressingUp)
+				app.getNode('LeftPaddle').y -= HEIGHT/75;
+			// if player is out of bounds move back in bounds 
+			if (app.getNode('LeftPaddle').y < 0)
+				app.getNode('LeftPaddle').y = 0;
+			if (app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height > HEIGHT)
+				app.getNode('LeftPaddle').y = HEIGHT - app.getNode('LeftPaddle').height;
+			if (app.getNode('RightPaddle').y < 0)
+				app.getNode('RightPaddle').y = 0;
+			if (app.getNode('RightPaddle').y + app.getNode('RightPaddle').height > HEIGHT)
+				app.getNode('RightPaddle').y = HEIGHT - app.getNode('RightPaddle').height;		
 		};
 		
+		
+		
+		//check if the ball is hitting either paddle 
 		CheckCollisionPaddles = function(){
-				if (app.getNode('ball').y > app.getNode('RightPaddle').y && app.getNode('ball').y < app.getNode('RightPaddle').y + app.getNode('RightPaddle').height){
-					if (app.getNode('ball').x + app.getNode('ball').width > app.getNode('RightPaddle').x && app.getNode('ball').x + app.getNode('ball').width < app.getNode('RightPaddle').x + app.getNode('ball').speedx + 1){
-						app.getNode('ball').speedx = -Math.abs(app.getNode('ball').speedx)
-					}
+			// if the ball has a y value overlapping with the right paddle's y values 
+			if (app.getNode('ball').y + app.getNode('ball').height > app.getNode('RightPaddle').y && app.getNode('ball').y < app.getNode('RightPaddle').y + app.getNode('RightPaddle').height){
+				// if the ball is only just right of the left side of the right paddle  
+				if (app.getNode('ball').x + app.getNode('ball').width > app.getNode('RightPaddle').x && app.getNode('ball').x + app.getNode('ball').width < app.getNode('RightPaddle').x + app.getNode('ball').speedx + 1){
+					//ball changes x direction
+					app.getNode('ball').speedx = -Math.abs(app.getNode('ball').speedx)
 				}
-				
-				if (app.getNode('ball').y > app.getNode('LeftPaddle').y && app.getNode('ball').y < app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height){
-					if (app.getNode('ball').x < app.getNode('LeftPaddle').x + app.getNode('LeftPaddle').width && app.getNode('ball').x > app.getNode('LeftPaddle').x + app.getNode('LeftPaddle').width + app.getNode('ball').speedx - 1){
-						app.getNode('ball').speedx = Math.abs(app.getNode('ball').speedx)
-					}
+			}
+			// if the ball has a y value overlapping with the left paddle's y values
+			if (app.getNode('ball').y + app.getNode('ball').height > app.getNode('LeftPaddle').y && app.getNode('ball').y < app.getNode('LeftPaddle').y + app.getNode('LeftPaddle').height){
+				// if the ball is only just left of the right side of the left paddle
+				if (app.getNode('ball').x < app.getNode('LeftPaddle').x + app.getNode('LeftPaddle').width && app.getNode('ball').x > app.getNode('LeftPaddle').x + app.getNode('LeftPaddle').width + app.getNode('ball').speedx - 1){
+					//ball changes x direction
+					app.getNode('ball').speedx = Math.abs(app.getNode('ball').speedx)
 				}
+			}
 		};
+		
+		
+		
+		
 		
 		UpdateBallPosition = function(){
 			CheckCollisionPaddles();
+			//move the ball according to x and y speeds 
 			app.getNode('ball').x += app.getNode('ball').speedx
 			app.getNode('ball').y += app.getNode('ball').speedy
+			
+			//check if ball is hitting the ceiling or floor and if so change y direction
 			if (app.getNode('ball').y < 0 || app.getNode('ball').y > HEIGHT - app.getNode('ball').height){
 				app.getNode('ball').speedy = -app.getNode('ball').speedy
-				
 			}
+			
+			//check if a player has scored then update score and reset the game 
 			if (app.getNode('ball').x < 0){
 				app.RightScore += 1;
 				app.reset();
@@ -121,7 +138,9 @@
 				app.reset();
 			}
 		};
-		
+	
+
+		//check if any of the relevant keys have been pressed and change respective value
 		CheckKeyPress = function(){
 			document.onkeydown = function(event){
 				if(event.keyCode === 40)	//downarrow
@@ -132,9 +151,13 @@
 					app.getNode('LeftPaddle').pressingDown = true;
 				else if(event.keyCode === 87) // w
 					app.getNode('LeftPaddle').pressingUp = true;
+				else if(event.keyCode === 32) // space bar
+					app.pause();
 			}
 		};
 		
+		
+		//check if any of the relevant keys have been released and change respective value
 		CheckKeyRelease = function(){
 			document.onkeyup = function(event){
 				if(event.keyCode === 40)	//downarrow
@@ -144,37 +167,39 @@
 				else if(event.keyCode === 83)	//s
 					app.getNode('LeftPaddle').pressingDown = false;
 				else if(event.keyCode === 87) // w
-					app.getNode('LeftPaddle').pressingUp = false;
-				else if(event.keyCode === 32) // w
-					app.pause();
+					app.getNode('LeftPaddle').pressingUp = false;   
 			}
 		};			
 		
+		//if app.pause is called then change the state of paused 
 		app.pause = function(){
 			paused = !paused;
 		};
 		
+		//if app.reset is called then reset all values back to to original values
 		app.reset = function(){
 			app.getNode('LeftPaddle').y = HEIGHT*0.375;
 			app.getNode('RightPaddle').y = HEIGHT*0.375;
 			app.getNode('ball').x = WIDTH*0.5;
 			app.getNode('ball').y = HEIGHT*0.5;
 			paused = true;
+			
+			//check if a player has got to 7 and hence won, id so reset scores 
 			if (app.LeftScore === 7){
 				console.log('Left Player Wins')
 				app.LeftScore = 0;
 				app.RightScore = 0;
 			}	
-				
 			else if (app.RightScore === 7){
 				console.log('Right Player Wins')
 				app.LeftScore = 0;
 				app.RightScore = 0;
 			}
-			
 		};
 		
+		
 		app.onInit = function(){
+			//create left paddle 
 			this.nodes.push({
 				id : 'LeftPaddle',
 				x  : WIDTH*0.125,
@@ -187,7 +212,8 @@
 				pressingUp : false,
 				pressingDown : false,
 			});
-
+			
+			//create right paddle 
 			this.nodes.push({
 				id : 'RightPaddle',
 				x  : WIDTH*0.875,
@@ -201,6 +227,7 @@
 				pressingDown : false,
 			});
 			
+			//create ball
 			this.nodes.push = ({
 				id : 'ball',
 				x  : WIDTH*0.5,
@@ -212,10 +239,12 @@
 				speedy : HEIGHT/125,
 			});
 		};
-
+		
+		
  		app.onUpdate = function(time){
 			CheckKeyPress();
 			CheckKeyRelease();
+			//if paused don't change any positions
 			if(paused){
 				return
 			}
