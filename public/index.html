@@ -13,14 +13,15 @@
 		//setting global variables
 		var HEIGHT;
 		var WIDTH;
+		var SPEEDX;
+		var SPEEDY;
 		var paused = true;
-		
 		
 		
 		
 		//adjusting game size on load of game 
 		WIDTH = window.innerWidth;
-		HEIGHT = window.innerHeight -25;
+		HEIGHT = window.innerHeight -25; // -25 to remove scroll bar 
 		if (WIDTH > 2 * HEIGHT)
 			WIDTH = 2 * HEIGHT;
 		else 
@@ -39,7 +40,7 @@
 			OLDWIDTH = WIDTH;
 			OLDHEIGHT = HEIGHT;
 			WIDTH = window.innerWidth;
-			HEIGHT = window.innerHeight -25;
+			HEIGHT = window.innerHeight -25; // -25 to remove scroll bar 
 			if (WIDTH > 2 * HEIGHT)
 				WIDTH = 2 * HEIGHT;
 			else 
@@ -58,8 +59,8 @@
 			app.getNode('ball').y *= HEIGHT/OLDHEIGHT;
 			app.getNode('ball').width *= WIDTH/OLDWIDTH;
 			app.getNode('ball').height *= HEIGHT/OLDHEIGHT;
-			app.getNode('ball').speedx = WIDTH/200;
-			app.getNode('ball').speedy = HEIGHT/125;
+			app.getNode('ball').speedx *= WIDTH/OLDWIDTH;
+			app.getNode('ball').speedy *= HEIGHT/OLDHEIGHT;
 			app.getNode('LeftPaddle').width *= WIDTH/OLDWIDTH;
 			app.getNode('LeftPaddle').height *= HEIGHT/OLDHEIGHT;
 			app.getNode('RightPaddle').width *= WIDTH/OLDWIDTH;
@@ -182,15 +183,34 @@
 			app.getNode('RightPaddle').y = HEIGHT*0.375;
 			app.getNode('ball').x = WIDTH*0.5;
 			app.getNode('ball').y = HEIGHT*0.5;
+			
+			
+			random_number1 = Math.random(); //is the ball moving left or right
+			random_number2 = Math.random(); //is the ball moving up or down
+			random_number3 = Math.random()*45; //what angle within the quadrant 
+			
+			app.getNode('ball').speedx = (HEIGHT/80)*Math.sin((22.5+random_number3)*Math.PI/180);
+			app.getNode('ball').speedy = (HEIGHT/80)*Math.cos((22.5+random_number3)*Math.PI/180);
+			
+			if (random_number1 > 0.5){
+				app.getNode('ball').speedx *= -1
+			}
+			
+			if (random_number2 > 0.5){
+				app.getNode('ball').speedy *= -1
+			}
+
+
+			
 			paused = true;
 			
-			//check if a player has got to 7 and hence won, if so reset scores 
-			if (app.LeftScore === 7){
+			//check if a player has got to 3 and hence won, if so reset scores 
+			if (app.LeftScore === 3){
 				console.log('Left Player Wins')
 				app.LeftScore = 0;
 				app.RightScore = 0;
 			}	
-			else if (app.RightScore === 7){
+			else if (app.RightScore === 3){
 				console.log('Right Player Wins')
 				app.LeftScore = 0;
 				app.RightScore = 0;
@@ -236,7 +256,7 @@
 				height : HEIGHT*0.025,
 				color  : 'red',
 				speedx : WIDTH/200,
-				speedy : HEIGHT/125,
+				speedy : HEIGHT/140,
 			});
 		};
 		
