@@ -20,7 +20,7 @@
 		
 		//adjusting game size on load of game 
 		WIDTH = window.innerWidth;
-		HEIGHT = window.innerHeight;
+		HEIGHT = window.innerHeight -25;
 		if (WIDTH > 2 * HEIGHT)
 			WIDTH = 2 * HEIGHT;
 		else 
@@ -39,7 +39,7 @@
 			OLDWIDTH = WIDTH;
 			OLDHEIGHT = HEIGHT;
 			WIDTH = window.innerWidth;
-			HEIGHT = window.innerHeight;
+			HEIGHT = window.innerHeight -25;
 			if (WIDTH > 2 * HEIGHT)
 				WIDTH = 2 * HEIGHT;
 			else 
@@ -184,7 +184,7 @@
 			app.getNode('ball').y = HEIGHT*0.5;
 			paused = true;
 			
-			//check if a player has got to 7 and hence won, id so reset scores 
+			//check if a player has got to 7 and hence won, if so reset scores 
 			if (app.LeftScore === 7){
 				console.log('Left Player Wins')
 				app.LeftScore = 0;
